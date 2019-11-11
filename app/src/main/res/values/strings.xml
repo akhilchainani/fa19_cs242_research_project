@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">fa19_cs242_research_project</string>
+    <string name="title">Trivia Me!</string>
+
+    <string name="facebook_app_id">810521702717906</string>
+    <string name="fb_login_protocol_scheme">fb810521702717906</string>
+
+    <string name="question_text">This is a default question?</string>
+    <string name="option_one_button">Option One</string>
+    <string name="option_two_button">Option Two</string>
+    <string name="option_three_button">Option Three</string>
+    <string name="option_four_button">Option Four</string>
+    <string name="skip_button">SKIP</string>
+
+    <string name="high_score">High Score: 0</string>
+    <string name="profile_name">Firstname Lastname</string>
+</resources>
