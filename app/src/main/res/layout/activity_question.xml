@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="left"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    tools:context=".QuestionActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <ImageButton
+            android:id="@+id/profile_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@drawable/profile_button" />
+
+        <TextView
+            android:id="@+id/high_score"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="240dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/high_score"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/myQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginTop="100dp"
+        android:text="@string/question_text"
+        android:padding="10dp"
+        android:textSize="24sp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/option_one_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:text="@string/option_one_button" />
+
+        <Button
+            android:id="@+id/option_two_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:text="@string/option_two_button" />
+
+        <Button
+            android:id="@+id/option_three_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:text="@string/option_three_button" />
+
+        <Button
+            android:id="@+id/option_four_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:text="@string/option_four_button" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/skip_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_button" />
+
+            <Button
+                android:id="@+id/sign_out_button_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="220dp"
+                android:text="SIGN OUT" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
