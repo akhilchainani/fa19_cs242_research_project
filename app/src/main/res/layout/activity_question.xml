@@ -7,7 +7,7 @@
     android:gravity="left"
     android:orientation="vertical"
     android:background="@drawable/background"
-    tools:context=".QuestionActivity">
+    tools:context=".QuestionPage.QuestionActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
