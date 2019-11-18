@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.example.fa19_cs242_research_project.LoginPage.Login;
 import com.example.fa19_cs242_research_project.LoginPage.DownloadImageTask;
 import com.example.fa19_cs242_research_project.R;
+import com.example.fa19_cs242_research_project.Util.Constants;
+import com.example.fa19_cs242_research_project.Util.DatabaseHandler;
+import com.example.fa19_cs242_research_project.Util.Player;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -24,12 +27,7 @@ import com.google.android.gms.tasks.Task;
 
 public class ProfilePage extends AppCompatActivity {
 
-    private String personName;
-    private String personGivenName;
-    private String personFamilyName;
-    private String personEmail;
-    private String personId;
-    private Uri personPhoto;
+    private Player currentPlayer;
 
     private ImageView profilePic;
 
@@ -44,28 +42,30 @@ public class ProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        initializeProfileAttributes();
+        currentPlayer = initializeProfileAttributes();
         setUpSignOutButton();
 
-        String[] urlList = {personPhoto.toString()};
+        String[] urlList = {currentPlayer.getProfilePicUri()};
+        System.out.println(currentPlayer.getProfilePicUri());
         profilePic = (ImageView) findViewById(R.id.profile_pic);
         DownloadImageTask getProfilePic = (DownloadImageTask) new DownloadImageTask(profilePic).execute(urlList);
 
         profileName = (TextView) findViewById(R.id.profile_name);
-        profileName.setText(personName);
+        profileName.setText(currentPlayer.getPlayerName());
 
-        //retrieve highscore value and update text with that info
-        int highScoreVal = getIntent().getIntExtra("highscore", 0);
-        System.out.println(highScoreVal);
         highScore = (TextView) findViewById(R.id.high_score_val);
-        highScore.setText(Integer.toString(highScoreVal));
+        highScore.setText(Integer.toString(currentPlayer.getHighScore()));
     }
 
     /**
      * Initialize profile information from either Facebook or Google
      * to load profile page
      */
-    private void initializeProfileAttributes() {
+    private Player initializeProfileAttributes() {
+        String personName = "", personGivenName = "", personFamilyName = "", personEmail = "", personId = "";
+        Constants.loginType personLogin = Constants.loginType.valueOf("NATIVE");
+        Uri personPhoto = new Uri.Builder().build();
+
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         Profile profile = Profile.getCurrentProfile();
         if (acct != null) {
@@ -75,6 +75,7 @@ public class ProfilePage extends AppCompatActivity {
             personEmail = acct.getEmail();
             personId = acct.getId();
             personPhoto = acct.getPhotoUrl();
+            personLogin = Constants.loginType.valueOf("GOOGLE");
         }
         else if(profile != null){
             personName = profile.getName();
@@ -82,7 +83,28 @@ public class ProfilePage extends AppCompatActivity {
             personFamilyName = profile.getLastName();
             personId = profile.getId();
             personPhoto = profile.getProfilePictureUri(100, 100);
+            personEmail = "";
+            personLogin = Constants.loginType.valueOf("FACEBOOK");
         }
+
+        //retrieve highscore value and update text with that info
+        int highScoreVal = getIntent().getIntExtra("highscore", 0);
+        System.out.println(highScoreVal);
+
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        Player currentPlayer = dbHandler.getPlayer(personId);
+        if(currentPlayer == null) {
+            currentPlayer = new Player(personId,
+                                        personName,
+                                        personEmail,
+                                        "",
+                                        highScoreVal,
+                                        personLogin,
+                                        personPhoto.toString());
+            dbHandler.addPlayer(currentPlayer);
+        }
+
+        return currentPlayer;
     }
 
     /**

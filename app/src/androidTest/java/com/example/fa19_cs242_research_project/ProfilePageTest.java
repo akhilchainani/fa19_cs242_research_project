@@ -8,5 +8,6 @@ public class ProfilePageTest {
 
     @Before
     public void setUp() throws Exception {
+
     }
 }

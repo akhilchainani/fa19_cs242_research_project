@@ -3,6 +3,7 @@ package com.example.fa19_cs242_research_project.QuestionPage;
 public class Question {
 
     private String question;
+
     private int answer;
 
     private String[] options;

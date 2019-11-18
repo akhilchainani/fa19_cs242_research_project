@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.fa19_cs242_research_project.QuestionPage.Question;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,13 +19,15 @@ public class QuestionGenerator {
     private RequestQueue requestQueue;
     private ArrayList<Question> questionQueue;
 
-    public QuestionGenerator(Context context) {
+    public QuestionGenerator(Context context,
+                             String category,
+                             String difficulty) {
         // Instantiate the RequestQueue.
         requestQueue = Volley.newRequestQueue(context);
         questionQueue = new ArrayList<>();
 
         try {
-            InputStream stream = context.getAssets().open("question_bank.json");
+            InputStream stream = context.getAssets().open(getInputStreamFilename(category, difficulty));
             int size = stream.available();
 
             byte[] bytes = new byte[size];
@@ -37,6 +38,35 @@ public class QuestionGenerator {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getInputStreamFilename(String category, String difficulty) {
+        String prefix = "question_bank_";
+        switch(category) {
+            case "General Knowledge":
+                prefix += "general_knowledge_";
+                break;
+            case "Video Games":
+                prefix += "video_games_";
+                break;
+            case "Entertainment":
+                prefix += "entertainment_";
+                break;
+        }
+
+        switch(difficulty) {
+            case "Easy":
+                prefix += "easy";
+                break;
+            case "Medium":
+                prefix += "medium";
+                break;
+            case "Hard":
+                prefix += "hard";
+                break;
+        }
+
+        return prefix + ".json";
     }
 
     /**

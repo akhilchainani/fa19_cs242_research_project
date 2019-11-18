@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.fa19_cs242_research_project.GameSettingsPage;
 import com.example.fa19_cs242_research_project.QuestionPage.QuestionActivity;
 import com.example.fa19_cs242_research_project.R;
 import com.facebook.AccessToken;
@@ -106,7 +107,7 @@ public class Login extends AppCompatActivity {
      * once login is successful, start questions activity
      */
     private void startQuestionsActivity() {
-        Intent questionIntent = new Intent(this, QuestionActivity.class);
+        Intent questionIntent = new Intent(this, GameSettingsPage.class);
         startActivity(questionIntent);
     }
 

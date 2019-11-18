@@ -51,7 +51,9 @@ public class QuestionActivity extends AppCompatActivity {
         highScoreText = (TextView) findViewById(R.id.high_score);
         setUpOptionButtons();
 
-        generator = new QuestionGenerator(this);
+        String category = getIntent().getStringExtra("category");
+        String difficulty = getIntent().getStringExtra("difficulty");
+        generator = new QuestionGenerator(this, category, difficulty);
         updateWithNewQuestion();
     }
 
