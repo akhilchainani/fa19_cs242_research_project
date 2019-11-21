@@ -67,7 +67,7 @@ public class GameSettingsPage extends AppCompatActivity {
         else {
             categoryOneText.setText(GENERAL_CATEGORY);
             categoryTwoText.setText(ENTERTAINMENT_CATEGORY);
-            //categoryThreeText.setText(VIDEO_GAMES_CATEGORY);
+            categoryThreeText.setText(VIDEO_GAMES_CATEGORY);
             isDifficulty = false;
         }
 

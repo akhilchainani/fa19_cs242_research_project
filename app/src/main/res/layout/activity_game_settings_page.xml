@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginBottom="140dp"
         android:layout_weight="0">
 
@@ -22,22 +22,22 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="0"
-            android:scaleType="fitCenter"
             android:background="@null"
+            android:scaleType="fitCenter"
             android:src="@drawable/profile_button" />
 
         <TextView
             android:id="@+id/high_score"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="240dp"
+            android:layout_marginStart="240dp"
             android:layout_marginTop="10dp"
             android:layout_weight="0"
+            android:background="@null"
             android:gravity="center"
-            android:textSize="16sp"
-            android:textColor="@color/white"
             android:text="@string/high_score"
-            android:background="@null"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
@@ -47,22 +47,14 @@
         android:textColor="@color/white"
         android:layout_marginTop="100dp"
         android:text="@string/category_text"
+        android:textStyle="bold"
         android:padding="10dp"
         android:textSize="24sp"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:orientation="vertical">
 
         <Button
             android:id="@+id/option_one_settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginBottom="10dp"
             android:text="@string/option_one_button" />
 
@@ -70,7 +62,6 @@
             android:id="@+id/option_two_settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginBottom="10dp"
             android:text="@string/option_two_button" />
 
@@ -83,16 +74,15 @@
             <Button
                 android:id="@+id/option_three_settings_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:text="@string/option_two_button" />
+                android:text="@string/option_three_button" />
 
             <Button
                 android:id="@+id/sign_out_button_question"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="220dp"
-                android:text="SIGN OUT" />
+                android:text="@string/sign_out" />
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

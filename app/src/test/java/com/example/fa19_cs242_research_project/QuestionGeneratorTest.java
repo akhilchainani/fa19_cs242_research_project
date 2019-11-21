@@ -26,5 +26,6 @@ public class QuestionGeneratorTest {
         assertNotNull(questionGeneratorTest);
         assertTrue(questionGeneratorTest.hasNextQuestion());
         Question question = questionGeneratorTest.getNextQuestion();
+        assertNotNull(question);
     }
 }
