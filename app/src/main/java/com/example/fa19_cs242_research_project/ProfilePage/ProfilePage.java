@@ -13,17 +13,34 @@ import android.widget.TextView;
 
 import com.example.fa19_cs242_research_project.LoginPage.Login;
 import com.example.fa19_cs242_research_project.LoginPage.DownloadImageTask;
+import com.example.fa19_cs242_research_project.MainMenu.MainMenu;
 import com.example.fa19_cs242_research_project.R;
 import com.example.fa19_cs242_research_project.Util.Constants;
 import com.example.fa19_cs242_research_project.Util.DatabaseHandler;
 import com.example.fa19_cs242_research_project.Util.Player;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.facebook.share.model.GameRequestContent;
+import com.facebook.share.widget.GameRequestDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.view.LineChartView;
 
 public class ProfilePage extends AppCompatActivity {
 
@@ -36,14 +53,24 @@ public class ProfilePage extends AppCompatActivity {
     private TextView highScore2;
 
     private Button signOutButton;
+    private Button inviteButton;
+    private Button mainMenuButton;
+
+    private GameRequestDialog requestDialog;
+    private CallbackManager callbackManager;
+
+    private LineChartView lineChartView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         currentPlayer = initializeProfileAttributes();
         setUpSignOutButton();
+        setUpInviteButton();
+        setUpMainMenuButton();
 
         String[] urlList = {currentPlayer.getProfilePicUri()};
         System.out.println(currentPlayer.getProfilePicUri());
@@ -55,6 +82,58 @@ public class ProfilePage extends AppCompatActivity {
 
         highScore = (TextView) findViewById(R.id.high_score_val);
         highScore.setText(Integer.toString(currentPlayer.getHighScore()));
+
+        lineChartView = findViewById(R.id.chart);
+        setUpLineChart();
+    }
+
+    private void goToMainMenu() {
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+    }
+
+    private void setUpMainMenuButton() {
+        mainMenuButton = findViewById(R.id.main_menu_button);
+        mainMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMainMenu();
+            }
+        });
+    }
+
+    private void setUpLineChart() {
+        String[] axisData = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        int[] yAxisData = new int[10];
+        for(int i = currentPlayer.getPastScores().size() - 10; i < currentPlayer.getPastScores().size(); i++) {
+            yAxisData[i - (currentPlayer.getPastScores().size() - 10)] = Integer.parseInt(currentPlayer.getPastScores().get(i));
+        }
+
+        List yAxisValues = new ArrayList();
+        List axisValues = new ArrayList();
+
+        Line line = new Line(yAxisValues);
+
+        for(int i = 0; i < axisData.length; i++){
+            axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));
+        }
+
+        for (int i = 0; i < yAxisData.length; i++){
+            yAxisValues.add(new PointValue(i, yAxisData[i]));
+        }
+
+        List lines = new ArrayList();
+        lines.add(line);
+        LineChartData data = new LineChartData();
+        data.setLines(lines);
+        lineChartView.setLineChartData(data);
+
+        Axis axis = new Axis();
+        axis.setValues(axisValues);
+        data.setAxisXBottom(axis);
+
+        Axis yAxis = new Axis();
+        data.setAxisYLeft(yAxis);
     }
 
     /**
@@ -87,21 +166,31 @@ public class ProfilePage extends AppCompatActivity {
             personLogin = Constants.loginType.valueOf("FACEBOOK");
         }
 
-        //retrieve highscore value and update text with that info
-        int highScoreVal = getIntent().getIntExtra("highscore", 0);
-        System.out.println(highScoreVal);
-
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        DatabaseHandler dbHandler = new DatabaseHandler(getApplicationContext());
         Player currentPlayer = dbHandler.getPlayer(personId);
         if(currentPlayer == null) {
+            System.out.println("player does not exist");
             currentPlayer = new Player(personId,
-                                        personName,
-                                        personEmail,
-                                        "",
-                                        highScoreVal,
-                                        personLogin,
-                                        personPhoto.toString());
+                    personName,
+                    personEmail,
+                    "",
+                    0,
+                    personLogin,
+                    personPhoto.toString());
+            currentPlayer.addNewScore(1);
+            currentPlayer.addNewScore(2);
+            currentPlayer.addNewScore(5);
+            currentPlayer.addNewScore(3);
+            currentPlayer.addNewScore(4);
+            currentPlayer.addNewScore(8);
+            currentPlayer.addNewScore(9);
+            currentPlayer.addNewScore(7);
+            currentPlayer.addNewScore(11);
             dbHandler.addPlayer(currentPlayer);
+        }
+        else {
+            System.out.println("player does exist");
+            dbHandler.updatePlayer(currentPlayer);
         }
 
         return currentPlayer;
@@ -138,5 +227,43 @@ public class ProfilePage extends AppCompatActivity {
 
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
+    }
+
+    /**
+     * Initialize functionality for invite button
+     */
+    private void setUpInviteButton() {
+        inviteButton = (Button) findViewById(R.id.invite_button_profile);
+        callbackManager = CallbackManager.Factory.create();
+        requestDialog = new GameRequestDialog(this);
+        requestDialog.registerCallback(callbackManager,
+                new FacebookCallback<GameRequestDialog.Result>() {
+                    public void onSuccess(GameRequestDialog.Result result) {
+                        String id = result.getRequestId();
+                    }
+                    public void onCancel() {}
+                    public void onError(FacebookException error) {}
+                }
+        );
+        System.out.println("request dialog created");
+
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickRequestButton();
+            }
+        });
+    }
+
+    private void onClickRequestButton() {
+        GameRequestContent content = new GameRequestContent.Builder()
+                .setMessage("Come play this new quiz game with me")
+                .build();
+        requestDialog.show(content);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

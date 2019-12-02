@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fa19_cs242_research_project.GameOver.GameOver;
 import com.example.fa19_cs242_research_project.LoginPage.Login;
 import com.example.fa19_cs242_research_project.ProfilePage.ProfilePage;
 import com.example.fa19_cs242_research_project.R;
@@ -200,16 +201,25 @@ public class QuestionActivity extends AppCompatActivity {
         if(choice == answer) {
             popupText = "Correct!";
             highScore++;
+
+            //generate a popup notifying if answer is correct
+            Toast.makeText(this, popupText, Toast.LENGTH_SHORT).show();
+            highScoreText.setText("High Score: " + highScore);
+            updateWithNewQuestion();
         }
         else {
             popupText = "Incorrect :(";
+            Intent gameOverIntent = new Intent(this, GameOver.class);
+            gameOverIntent.putExtra("highscore", highScore);
             highScore = 0;
-        }
 
-        //generate a popup notifying if answer is correct
-        Toast.makeText(this, popupText, Toast.LENGTH_SHORT).show();
-        highScoreText.setText("High Score: " + highScore);
-        updateWithNewQuestion();
+            //generate a popup notifying if answer is correct
+            Toast.makeText(this, popupText, Toast.LENGTH_SHORT).show();
+            highScoreText.setText("High Score: " + highScore);
+            updateWithNewQuestion();
+
+            startActivity(gameOverIntent);
+        }
     }
 
     public int getCurrentAnswer() {

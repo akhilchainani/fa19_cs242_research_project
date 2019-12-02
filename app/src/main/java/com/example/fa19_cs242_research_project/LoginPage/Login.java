@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.fa19_cs242_research_project.GameSettingsPage;
+import com.example.fa19_cs242_research_project.MainMenu.MainMenu;
 import com.example.fa19_cs242_research_project.QuestionPage.QuestionActivity;
 import com.example.fa19_cs242_research_project.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -58,6 +60,10 @@ public class Login extends AppCompatActivity {
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Profile profile = Profile.getCurrentProfile();
+        if(account != null || profile != null) {
+            startQuestionsActivity();
+        }
 
         //FacebookLogin
         setUpFacebookLogin();
@@ -107,8 +113,8 @@ public class Login extends AppCompatActivity {
      * once login is successful, start questions activity
      */
     private void startQuestionsActivity() {
-        Intent questionIntent = new Intent(this, GameSettingsPage.class);
-        startActivity(questionIntent);
+        Intent mainIntent = new Intent(this, MainMenu.class);
+        startActivity(mainIntent);
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
