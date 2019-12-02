@@ -6,6 +6,8 @@ import java.util.List;
 public class Player {
     private static String playerName;
     private static ArrayList<String> friends;
+
+    private static ArrayList<String> pastScores;
     private static int highScore;
     private static String email;
     private static String phoneNumber;
@@ -28,6 +30,19 @@ public class Player {
         this.login = login;
         this.profilePicUri = profilePicUri;
         this.friends = new ArrayList<>();
+        this.pastScores = new ArrayList<>();
+    }
+
+    public static ArrayList<String> getPastScores() {
+        return pastScores;
+    }
+
+    public static void setPastScores(ArrayList<String> pastScores) {
+        Player.pastScores = pastScores;
+    }
+
+    public static void addNewScore(int score) {
+        Player.pastScores.add(Integer.toString(score));
     }
 
     public static ArrayList<String> getFriends() {

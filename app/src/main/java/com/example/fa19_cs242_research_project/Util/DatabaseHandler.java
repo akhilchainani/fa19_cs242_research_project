@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 12;
     private static final String DATABASE_NAME = "playerManager";
     private static final String TABLE_PLAYERS = "players";
     private static final String KEY_ID = "player_id";
@@ -22,6 +22,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_HIGH_SCORE = "high_score";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PROFILE_PIC = "profile_pic";
+    private static final String KEY_PAST_SCORES = "past_scores";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +36,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_PLAYERS_TABLE = "CREATE TABLE " + TABLE_PLAYERS + "("
                 + KEY_ID + " TEXT PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_PH_NO + " TEXT," + KEY_EMAIL + " TEXT," + KEY_HIGH_SCORE
-                + " INTEGER," + KEY_FRIENDS + " TEXT," + KEY_LOGIN + " TEXT," +
+                + " INTEGER," + KEY_FRIENDS + " TEXT," + KEY_PAST_SCORES + " TEXT," + KEY_LOGIN + " TEXT," +
                 KEY_PROFILE_PIC + " TEXT" + ")";
         db.execSQL(CREATE_PLAYERS_TABLE);
     }
@@ -64,8 +66,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //turn array into delimited string
         String resultFriends = ("" + Arrays.asList(player.getFriends())).
-                replaceAll("(^.|.$)", "  ").replace(", ", "  , " );
+                replaceAll("(^.|.$)", "  ").replace(", ", ",");
         values.put(KEY_FRIENDS, resultFriends);
+
+        String resultPastScores = ("" + Arrays.asList(player.getPastScores())).
+                replaceAll("(^.|.$)", "  ").replace(", ", ",");
+        System.out.println(resultPastScores.substring(3, resultPastScores.length() - 3));
+        values.put(KEY_PAST_SCORES, resultPastScores.substring(3, resultPastScores.length() - 3));
 
         // Inserting Row
         db.insert(TABLE_PLAYERS, null, values);
@@ -79,7 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_PLAYERS, new String[] { KEY_ID,
                         KEY_NAME, KEY_EMAIL, KEY_HIGH_SCORE, KEY_PH_NO,
-                        KEY_LOGIN, KEY_FRIENDS, KEY_PROFILE_PIC}, KEY_ID + "=?",
+                        KEY_LOGIN, KEY_FRIENDS, KEY_PROFILE_PIC, KEY_PAST_SCORES}, KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             Player player = new Player(cursor.getString(cursor.getColumnIndex(KEY_ID)),
@@ -89,8 +96,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_HIGH_SCORE))),
                     Constants.loginType.valueOf(cursor.getString(cursor.getColumnIndex(KEY_LOGIN))),
                     cursor.getString(cursor.getColumnIndex(KEY_PROFILE_PIC)));
-            player.setFriends((ArrayList<String>) Arrays.asList(cursor.getString(cursor.getColumnIndex(KEY_FRIENDS)).split(",")));
 
+            player.setFriends(new ArrayList<>(Arrays.asList(cursor.getString(cursor.getColumnIndex(KEY_FRIENDS)).split(","))));
+            player.setPastScores(new ArrayList<>(Arrays.asList(cursor.getString(cursor.getColumnIndex(KEY_PAST_SCORES)).split(","))));
             // return player
             return player;
         }
@@ -144,6 +152,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String resultFriends = ("" + Arrays.asList(player.getFriends())).
                 replaceAll("(^.|.$)", "  ").replace(", ", "  , " );
         values.put(KEY_FRIENDS, resultFriends);
+
+        String resultPastScores = ("" + Arrays.asList(player.getPastScores())).
+                replaceAll("(^.|.$)", "  ").replace(", ", ",");
+        System.out.println(resultPastScores.substring(3, resultPastScores.length() - 3));
+        values.put(KEY_PAST_SCORES, resultPastScores.substring(3, resultPastScores.length() - 3));
 
         // updating row
         return db.update(TABLE_PLAYERS, values, KEY_ID + " = ?",
